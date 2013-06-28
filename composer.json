@@ -21,8 +21,6 @@
     },
 
     "autoload": {
-        "psr-0": {
-            "Gamespree\\I18n": "src/"
-        }
+        "classmap": ["src"]
     }
 }
