@@ -265,6 +265,12 @@
                 $userLangs[] = $_SESSION['lang'];
             }
 
+            // 3rd highest priority: SESSION parameter 'lang'
+            if (isset($_COOKIE['lang']) && is_string($_COOKIE['lang']))
+            {
+                $userLangs[] = $_COOKIE['lang'];
+            }
+
             // 4th highest priority: HTTP_ACCEPT_LANGUAGE
             if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
             {
