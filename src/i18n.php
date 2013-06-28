@@ -155,7 +155,7 @@
                         $config = parse_ini_file($this->langFilePath, TRUE);
                         break;
                     case 'yml':
-                        require_once 'vendor/spyc.php';
+                        require_once '../vendor/spyc.php';
                         $config = spyc_load_file($this->langFilePath);
                         break;
                     default:
