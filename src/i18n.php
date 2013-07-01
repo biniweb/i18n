@@ -254,21 +254,21 @@
             }
 
             // 2nd highest priority: GET parameter 'lang'
-            if (isset($_GET['lang']) && is_string($_GET['lang']))
+            if (isset($_GET['current-language']) && is_string($_GET['current-language']))
             {
-                $userLangs[] = $_GET['lang'];
+                $userLangs[] = $_GET['current-language'];
             }
 
             // 3rd highest priority: SESSION parameter 'lang'
-            if (isset($_SESSION['lang']) && is_string($_SESSION['lang']))
+            if (isset($_SESSION['current-language']) && is_string($_SESSION['current-language']))
             {
-                $userLangs[] = $_SESSION['lang'];
+                $userLangs[] = $_SESSION['current-language'];
             }
 
             // 3rd highest priority: SESSION parameter 'lang'
-            if (isset($_COOKIE['lang']) && is_string($_COOKIE['lang']))
+            if (isset($_COOKIE['current-language']) && is_string($_COOKIE['current-language']))
             {
-                $userLangs[] = $_COOKIE['lang'];
+                $userLangs[] = $_COOKIE['current-language'];
             }
 
             // 4th highest priority: HTTP_ACCEPT_LANGUAGE
