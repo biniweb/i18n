@@ -1,7 +1,7 @@
 {
     "name": "gamespree/i18n",
     "description": "Simple Component for internationalizing",
-    "homepage": "https://github.com/maniscalcogiuseppe82/php-i18n.git",
+    "homepage": "https://github.com/biniweb/php-i18n.git",
     "version": "0.0.1",
     "type": "library",
     "keywords": ["i18n"],
