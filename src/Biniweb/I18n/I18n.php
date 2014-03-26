@@ -79,24 +79,6 @@ class I18n
             $userLanguages[] = $this->_configVo->getForcedLanguage();
         }
 
-        if (isset($_SESSION['current-language']) && is_string($_SESSION['current-language'])) {
-            $userLanguages[] = $_SESSION['current-language'];
-        }
-
-        if (isset($_COOKIE['current-language']) && is_string($_COOKIE['current-language'])) {
-            $userLanguages[] = $_COOKIE['current-language'];
-        }
-
-        if (isset($_SERVER['GEOIP_COUNTRY_CODE_BY_NAME'])) {
-            $userLanguages[] = strtolower($_SERVER['GEOIP_COUNTRY_CODE_BY_NAME']);
-        }
-
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            foreach (explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $part) {
-                $userLanguages[] = strtolower(substr($part, 0, 2));
-            }
-        }
-
         $userLanguages[] = $this->_configVo->getFallbackLanguage();
 
         $userLanguages = array_unique($userLanguages);
