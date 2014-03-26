@@ -1,7 +1,7 @@
 {
     "name": "biniweb/i18n",
     "description": "Simple Component for internationalizing",
-    "homepage": "https://github.com/biniweb/php-i18n.git",
+    "homepage": "https://github.com/biniweb/php-i18n",
     "version": "0.0.1",
     "type": "library",
     "keywords": ["i18n"],
@@ -21,6 +21,8 @@
     },
 
     "autoload": {
-        "classmap": ["src"]
+        "psr-0": {
+            "Biniweb\\I18n": "src/"
+        }
     }
 }
