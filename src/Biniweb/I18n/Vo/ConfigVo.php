@@ -13,6 +13,9 @@ class ConfigVo
     /** @var  string */
     protected $_fallbackLanguage;
 
+    /** @var  string */
+    protected $_forcedLanguage;
+
     /**
      * @param array $data
      */
@@ -21,6 +24,7 @@ class ConfigVo
         $this->_filePath = $data['file_path'];
         $this->_cachePath = $data['cache_path'];
         $this->_fallbackLanguage = $data['fallback_language'];
+        $this->_forcedLanguage = isset($data['forced_language']) ? $data['forced_language'] : NULL;
     }
 
     /**
@@ -45,5 +49,25 @@ class ConfigVo
     public function getFallbackLanguage()
     {
         return $this->_fallbackLanguage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getForcedLanguage()
+    {
+        return $this->_forcedLanguage;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasForcedLanguage()
+    {
+        if (isset($this->_forcedLanguage)) {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 }

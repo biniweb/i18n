@@ -75,8 +75,8 @@ class I18n
     {
         $userLanguages = [];
 
-        if (isset($_GET['current-language']) && is_string($_GET['current-language'])) {
-            $userLanguages[] = $_GET['current-language'];
+        if ($this->_configVo->hasForcedLanguage()) {
+            $userLanguages[] = $this->_configVo->getForcedLanguage();
         }
 
         if (isset($_SESSION['current-language']) && is_string($_SESSION['current-language'])) {
