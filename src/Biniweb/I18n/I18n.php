@@ -58,7 +58,6 @@ class I18n
             require_once $cacheFilePath;
 
             $reflection = new \ReflectionClass(ConfigConstant::PREFIX);
-            $reflection->getConstants();
 
             return $reflection->getConstants();
         }
@@ -121,7 +120,7 @@ class I18n
             if (is_array($value)) {
                 $code .= $this->_compile($value, $key . ConfigConstant::SECTION_SEPARETOR);
             } else {
-                $code .= 'const ' . ConfigConstant::PREFIX . $key . ' = \'' . str_replace('\'', '\\\'', $value) . "';\n";
+                $code .= 'const ' . $key . ' = \'' . str_replace('\'', '\\\'', $value) . "';\n";
             }
         }
 
