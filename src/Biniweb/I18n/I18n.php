@@ -32,8 +32,9 @@ class I18n
         $appliedLanguage = NULL;
         $languageFilePath = NULL;
         foreach ($userLanguages as $languageCode) {
-            $languageFilePath = str_replace('{LANGUAGE}', $languageCode, $this->_configVo->getFilePath());
-            if (file_exists($languageFilePath)) {
+            $filePath = str_replace('{LANGUAGE}', $languageCode, $this->_configVo->getFilePath());
+            if (file_exists($filePath)) {
+                $languageFilePath = $filePath;
                 $appliedLanguage = $languageCode;
                 break;
             }
