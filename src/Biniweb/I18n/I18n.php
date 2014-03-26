@@ -23,7 +23,7 @@ class I18n
     #############################################
 
     /**
-     * @return array
+     * @return array|bool
      */
     public function init()
     {
@@ -40,25 +40,30 @@ class I18n
             }
         }
 
-        $cacheFilePath = $this->_configVo->getCachePath() . '/php_i18n_' . md5_file(__FILE__) . '_' . $appliedLanguage . '.cache.php';
+        if (isset($appliedLanguage) && isset($languageFilePath)) {
 
-        if (!file_exists($cacheFilePath) || filemtime($cacheFilePath) < filemtime($languageFilePath)) {
-            $config = parse_ini_file($languageFilePath, TRUE);
+            $cacheFilePath = $this->_configVo->getCachePath() . '/php_i18n_' . md5_file(__FILE__) . '_' . $appliedLanguage . '.cache.php';
 
-            $compiled = "<?php class " . ConfigConstant::PREFIX . " {\n";
-            $compiled .= $this->_compile($config);
-            $compiled .= '}';
+            if (!file_exists($cacheFilePath) || filemtime($cacheFilePath) < filemtime($languageFilePath)) {
+                $config = parse_ini_file($languageFilePath, TRUE);
 
-            file_put_contents($cacheFilePath, $compiled);
-            chmod($cacheFilePath, 0777);
+                $compiled = "<?php class " . ConfigConstant::PREFIX . " {\n";
+                $compiled .= $this->_compile($config);
+                $compiled .= '}';
+
+                file_put_contents($cacheFilePath, $compiled);
+                chmod($cacheFilePath, 0777);
+            }
+
+            require_once $cacheFilePath;
+
+            $reflection = new \ReflectionClass(ConfigConstant::PREFIX);
+            $reflection->getConstants();
+
+            return $reflection->getConstants();
         }
 
-        require_once $cacheFilePath;
-
-        $reflection = new \ReflectionClass(ConfigConstant::PREFIX);
-        $reflection->getConstants();
-
-        return $reflection->getConstants();
+        return FALSE;
 
     }
 
