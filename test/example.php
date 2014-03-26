@@ -6,8 +6,8 @@ $data = [
 ];
 $configVo = new \Biniweb\I18n\Vo\ConfigVo($data);
 $i18n = new \Biniweb\I18n\I18n($configVo);
-$i18n->init();
+$language = $i18n->init();
 ?>
 
-<p>A greeting: <?php echo L::greeting; ?></p>
-<p>Something other: <?php echo L::category_somethingother; ?></p>
+<p>A greeting: <?php echo $language['greeting']; ?></p>
+<p>Something other: <?php echo $language['category_somethingother']; ?></p>

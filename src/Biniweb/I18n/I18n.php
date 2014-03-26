@@ -2,6 +2,7 @@
 
 namespace Biniweb\I18n;
 
+use Biniweb\I18n\Constants\ConfigConstant;
 use Biniweb\I18n\Vo\ConfigVo;
 
 class I18n
@@ -26,41 +27,34 @@ class I18n
      */
     public function init()
     {
-        $this->_configVo->setInitialized(TRUE);
-
         $userLanguages = $this->_checkUserLanguages();
-        $this->_configVo->setUserLanguages($userLanguages);
 
-        $this->_configVo->setAppliedLanguage(NULL);
-        foreach ($this->_configVo->getUserLanguages() as $languageCode) {
+        $appliedLanguage = NULL;
+        $languageFilePath = NULL;
+        foreach ($userLanguages as $languageCode) {
             $languageFilePath = str_replace('{LANGUAGE}', $languageCode, $this->_configVo->getFilePath());
-            $this->_configVo->setLanguageFilePath($languageFilePath);
             if (file_exists($languageFilePath)) {
-                $this->_configVo->setAppliedLanguage($languageCode);
+                $appliedLanguage = $languageCode;
                 break;
             }
         }
 
-        $cacheFilePath = $this->_configVo->getCachePath() . '/php_i18n_' . md5_file(__FILE__) . '_' . $this->_configVo->getAppliedLanguage() . '.cache.php';
-        $this->_configVo->setCacheFilePath($cacheFilePath);
+        $cacheFilePath = $this->_configVo->getCachePath() . '/php_i18n_' . md5_file(__FILE__) . '_' . $appliedLanguage . '.cache.php';
 
-        if (
-            !file_exists($this->_configVo->getCacheFilePath())
-            || filemtime($this->_configVo->getCacheFilePath()) < filemtime($this->_configVo->getLanguageFilePath())
-        ) {
-            $config = parse_ini_file($this->_configVo->getLanguageFilePath(), TRUE);
+        if (!file_exists($cacheFilePath) || filemtime($cacheFilePath) < filemtime($languageFilePath)) {
+            $config = parse_ini_file($languageFilePath, TRUE);
 
-            $compiled = "<?php class " . $this->_configVo->getPrefix() . " {\n";
+            $compiled = "<?php class " . ConfigConstant::PREFIX . " {\n";
             $compiled .= $this->_compile($config);
             $compiled .= '}';
 
-            file_put_contents($this->_configVo->getCacheFilePath(), $compiled);
-            chmod($this->_configVo->getCacheFilePath(), 0777);
+            file_put_contents($cacheFilePath, $compiled);
+            chmod($cacheFilePath, 0777);
         }
 
-        require_once $this->_configVo->getCacheFilePath();
+        require_once $cacheFilePath;
 
-        $reflection = new \ReflectionClass('L');
+        $reflection = new \ReflectionClass(ConfigConstant::PREFIX);
         $reflection->getConstants();
 
         return $reflection->getConstants();
@@ -75,10 +69,6 @@ class I18n
     protected function _checkUserLanguages()
     {
         $userLanguages = [];
-
-        if ($this->_configVo->hasForcedLanguage()) {
-            $userLanguages[] = $this->_configVo->getForcedLanguage();
-        }
 
         if (isset($_GET['current-language']) && is_string($_GET['current-language'])) {
             $userLanguages[] = $_GET['current-language'];
@@ -123,9 +113,9 @@ class I18n
         $code = '';
         foreach ($config as $key => $value) {
             if (is_array($value)) {
-                $code .= $this->_compile($value, $key . $this->_configVo->getSectionSeperator());
+                $code .= $this->_compile($value, $key . ConfigConstant::SECTION_SEPARETOR);
             } else {
-                $code .= 'const ' . $this->_configVo->getPrefix() . $key . ' = \'' . str_replace('\'', '\\\'', $value) . "';\n";
+                $code .= 'const ' . ConfigConstant::PREFIX . $key . ' = \'' . str_replace('\'', '\\\'', $value) . "';\n";
             }
         }
 
