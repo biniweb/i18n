@@ -34,16 +34,43 @@ somethingother = "Etwas anderes..."
 
 ### 2. Initialize the class
 
-```
+```php
 <?php
+
 use \Biniweb\I18n\Vo\ConfigVo;
 use \Biniweb\I18n\I18n;
+
 $data = [
     'file_path' => 'languages/{LANGUAGE}.ini',
     'cache_path' => 'cache/',
     'fallback_language' => 'en',
 ];
 $configVo = new ConfigVo($data);
+
 $i18n = new I18n($configVo);
+
 $language = $i18n->init();
+```
+
+### 3. Use the localizations
+
+```html
+<p>A greeting: <?php echo $language['greeting']; ?> </p>
+<p>Something other: <?php echo $language['category_somethingother']; ?> </p>
+```
+
+### 3. Use the localizations with Mustache
+
+```php
+$engine = new Mustache_Engine();
+return $engine->render($content, [
+    'l' => $language
+]);
+```
+
+### 4. html template
+
+```html
+<p>A greeting: {{#l}} {{greenting}} {{/}} </p>
+<p>Something other: {{#l}} {{category_somethingother}} {{/}} </p>
 ```
