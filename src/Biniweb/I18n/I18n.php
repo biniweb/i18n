@@ -21,11 +21,14 @@ class I18n
 
     #############################################
 
+    /**
+     * @return array
+     */
     public function init()
     {
         $this->_configVo->setInitialized(TRUE);
 
-        $userLanguages = $this->checkUserLanguages();
+        $userLanguages = $this->_checkUserLanguages();
         $this->_configVo->setUserLanguages($userLanguages);
 
         $this->_configVo->setAppliedLanguage(NULL);
@@ -53,10 +56,15 @@ class I18n
 
             file_put_contents($this->_configVo->getCacheFilePath(), $compiled);
             chmod($this->_configVo->getCacheFilePath(), 0777);
-
         }
 
         require_once $this->_configVo->getCacheFilePath();
+
+        $reflection = new \ReflectionClass('L');
+        $reflection->getConstants();
+
+        return $reflection->getConstants();
+
     }
 
     #############################################
@@ -64,7 +72,7 @@ class I18n
     /**
      * @return array
      */
-    public function checkUserLanguages()
+    protected function _checkUserLanguages()
     {
         $userLanguages = [];
 
