@@ -14,7 +14,7 @@ To use the i18n class, look at the test/example.php. You will find there a simpl
 ### 1. Create language files
 To use this class, you have to use ini files for the translated strings. This could look like this:
 
-`lang_en.ini` (English)
+`en.ini` (English)
 
 ```ini
 greeting = "Hello World!"
@@ -23,7 +23,7 @@ greeting = "Hello World!"
 somethingother = "Something other..."
 ```
 
-`lang_de.ini` (German)
+`de.ini` (German)
 
 ```ini
 greeting = "Hallo Welt!"
@@ -34,43 +34,50 @@ somethingother = "Etwas anderes..."
 
 ### 2. Initialize the class
 
+`example_array.php`
+
 ```php
-<?php
-
-use \Biniweb\I18n\Vo\I18nConfigVo;
-use \Biniweb\I18n\I18n;
-
 $data = [
     'file_path' => 'languages/{LANGUAGE}.ini',
     'cache_path' => 'cache/',
     'fallback_language' => 'en',
 ];
-$configVo = new I18nConfigVo($data);
+$configVo = new \Biniweb\I18n\Vo\I18nConfigVo($data);
 
-$i18n = new I18n($configVo);
+$i18n = new \Biniweb\I18n\I18n($configVo);
 
 $l = $i18n->init();
 ```
 
 ### 3. Use the localizations
 
+`example_array.php`
+
 ```php
 <p>A greeting: <?php echo $l['greeting']; ?> </p>
 <p>Something other: <?php echo $l['category_somethingother']; ?> </p>
 ```
 
+## Mustache
+
 ### 3. Use the localizations with Mustache
 
+`example_mustache.php`
+
 ```php
+$content = join('', file('example_mustache.html'));
+
 $engine = new Mustache_Engine();
-return $engine->render($content, [
-    'l' => $language,
+echo $engine->render($content, [
+    'l' => $l,
 ]);
 ```
 
 ### 4. html template
 
+`example_mustache.html`
+
 ```html
-<p>A greeting: {{#l}} {{greenting}} {{/l}} </p>
-<p>Something other: {{#l}} {{category_somethingother}} {{/l}} </p>
+<p>A greeting: {{#l}} {{greeting}} {{/l}}</p>
+<p>Something other: {{#l}} {{category_somethingother}} {{/l}}</p>
 ```

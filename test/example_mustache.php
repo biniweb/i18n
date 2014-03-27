@@ -10,11 +10,9 @@ $configVo = new \Biniweb\I18n\Vo\I18nConfigVo($data);
 $i18n = new \Biniweb\I18n\I18n($configVo);
 $l = $i18n->init();
 
-$variables = [
-    'l' => $l,
-];
-
 $content = join('', file('example_mustache.html'));
 
 $engine = new Mustache_Engine();
-echo $engine->render($content, $variables);
+echo $engine->render($content, [
+    'l' => $l,
+]);
