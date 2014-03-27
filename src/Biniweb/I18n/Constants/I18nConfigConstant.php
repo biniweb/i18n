@@ -2,7 +2,7 @@
 
 namespace Biniweb\I18n\Constants;
 
-class ConfigConstant
+class I18nConfigConstant
 {
     const SECTION_SEPARETOR = '_';
     const PREFIX = 'L';

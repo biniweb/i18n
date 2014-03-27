@@ -37,7 +37,7 @@ somethingother = "Etwas anderes..."
 ```php
 <?php
 
-use \Biniweb\I18n\Vo\ConfigVo;
+use \Biniweb\I18n\Vo\I18nConfigVo;
 use \Biniweb\I18n\I18n;
 
 $data = [
@@ -45,7 +45,7 @@ $data = [
     'cache_path' => 'cache/',
     'fallback_language' => 'en',
 ];
-$configVo = new ConfigVo($data);
+$configVo = new I18nConfigVo($data);
 
 $i18n = new I18n($configVo);
 

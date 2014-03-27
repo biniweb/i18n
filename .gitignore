@@ -1,3 +1,5 @@
-langcache/*
-!langcache/README.md
-.idea
+test/cache/*
+!test/cache/readme
+.idea/
+vendor/
+composer.lock

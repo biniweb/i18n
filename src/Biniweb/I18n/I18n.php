@@ -2,20 +2,20 @@
 
 namespace Biniweb\I18n;
 
-use Biniweb\I18n\Constants\ConfigConstant;
-use Biniweb\I18n\Vo\ConfigVo;
+use Biniweb\I18n\Constants\I18nConfigConstant;
+use Biniweb\I18n\Vo\I18nConfigVo;
 
 class I18n
 {
-    /** @var \Biniweb\I18n\Vo\ConfigVo */
+    /** @var \Biniweb\I18n\Vo\I18nConfigVo */
     protected $_configVo;
 
     #############################################
 
     /**
-     * @param ConfigVo $vo
+     * @param I18nConfigVo $vo
      */
-    public function __construct(ConfigVo $vo)
+    public function __construct(I18nConfigVo $vo)
     {
         $this->_configVo = $vo;
     }
@@ -49,7 +49,7 @@ class I18n
             if (!file_exists($cacheFilePath) || filemtime($cacheFilePath) < filemtime($languageFilePath)) {
 
                 $config = parse_ini_file($languageFilePath, TRUE);
-                $compiled = "<?php class " . ConfigConstant::PREFIX . " {\n";
+                $compiled = "<?php class " . I18nConfigConstant::PREFIX . " {\n";
                 $compiled .= $this->_compile($config);
                 $compiled .= '}';
                 file_put_contents($cacheFilePath, $compiled);
@@ -60,7 +60,7 @@ class I18n
 
             if (!$this->_configVo->getReturnObject()) {
 
-                return (new \ReflectionClass(ConfigConstant::PREFIX))->getConstants();
+                return (new \ReflectionClass(I18nConfigConstant::PREFIX))->getConstants();
             }
         }
 
@@ -103,7 +103,7 @@ class I18n
         $code = '';
         foreach ($config as $key => $value) {
             if (is_array($value)) {
-                $code .= $this->_compile($value, $key . ConfigConstant::SECTION_SEPARETOR);
+                $code .= $this->_compile($value, $key . I18nConfigConstant::SECTION_SEPARETOR);
             } else {
                 $code .= 'const ' . $key . ' = \'' . str_replace('\'', '\\\'', $value) . "';\n";
             }

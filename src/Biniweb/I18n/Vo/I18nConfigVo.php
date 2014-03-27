@@ -2,7 +2,7 @@
 
 namespace Biniweb\I18n\Vo;
 
-class ConfigVo
+class I18nConfigVo
 {
     /** @var  string */
     protected $_filePath;
