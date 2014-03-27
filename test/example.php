@@ -8,8 +8,8 @@ $data = [
 ];
 $configVo = new ConfigVo($data);
 $i18n = new I18n($configVo);
-$language = $i18n->init();
+$l = $i18n->init();
 ?>
 
-<p>A greeting: <?php echo $language['greeting']; ?></p>
-<p>Something other: <?php echo $language['category_somethingother']; ?></p>
+<p>A greeting: <?php echo $l['greeting']; ?></p>
+<p>Something other: <?php echo $l['category_somethingother']; ?></p>

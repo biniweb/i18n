@@ -28,12 +28,14 @@ class I18n
     public function init()
     {
         $userLanguages = $this->_checkUserLanguages();
-
         $appliedLanguage = NULL;
         $languageFilePath = NULL;
+
         foreach ($userLanguages as $languageCode) {
+
             $filePath = str_replace('{LANGUAGE}', $languageCode, $this->_configVo->getFilePath());
             if (file_exists($filePath)) {
+
                 $languageFilePath = $filePath;
                 $appliedLanguage = $languageCode;
                 break;
@@ -45,21 +47,21 @@ class I18n
             $cacheFilePath = $this->_configVo->getCachePath() . '/php_i18n_' . md5_file(__FILE__) . '_' . $appliedLanguage . '.cache.php';
 
             if (!file_exists($cacheFilePath) || filemtime($cacheFilePath) < filemtime($languageFilePath)) {
-                $config = parse_ini_file($languageFilePath, TRUE);
 
+                $config = parse_ini_file($languageFilePath, TRUE);
                 $compiled = "<?php class " . ConfigConstant::PREFIX . " {\n";
                 $compiled .= $this->_compile($config);
                 $compiled .= '}';
-
                 file_put_contents($cacheFilePath, $compiled);
                 chmod($cacheFilePath, 0777);
             }
 
             require_once $cacheFilePath;
 
-            $reflection = new \ReflectionClass(ConfigConstant::PREFIX);
+            if (!$this->_configVo->getReturnObject()) {
 
-            return $reflection->getConstants();
+                return (new \ReflectionClass(ConfigConstant::PREFIX))->getConstants();
+            }
         }
 
         return FALSE;
@@ -90,6 +92,7 @@ class I18n
         return $userLanguages;
     }
 
+    #############################################
 
     /**
      * @param $config
