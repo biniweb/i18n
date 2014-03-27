@@ -54,7 +54,7 @@ $language = $i18n->init();
 
 ### 3. Use the localizations
 
-```html
+```php
 <p>A greeting: <?php echo $language['greeting']; ?> </p>
 <p>Something other: <?php echo $language['category_somethingother']; ?> </p>
 ```
@@ -71,6 +71,6 @@ return $engine->render($content, [
 ### 4. html template
 
 ```html
-<p>A greeting: {{#l}} {{greenting}} {{/}} </p>
-<p>Something other: {{#l}} {{category_somethingother}} {{/}} </p>
+<p>A greeting: {{#l}} {{greenting}} {{/l}} </p>
+<p>Something other: {{#l}} {{category_somethingother}} {{/l}} </p>
 ```
