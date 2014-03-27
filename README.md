@@ -49,14 +49,14 @@ $configVo = new ConfigVo($data);
 
 $i18n = new I18n($configVo);
 
-$language = $i18n->init();
+$l = $i18n->init();
 ```
 
 ### 3. Use the localizations
 
 ```php
-<p>A greeting: <?php echo $language['greeting']; ?> </p>
-<p>Something other: <?php echo $language['category_somethingother']; ?> </p>
+<p>A greeting: <?php echo $l['greeting']; ?> </p>
+<p>Something other: <?php echo $l['category_somethingother']; ?> </p>
 ```
 
 ### 3. Use the localizations with Mustache
@@ -64,7 +64,7 @@ $language = $i18n->init();
 ```php
 $engine = new Mustache_Engine();
 return $engine->render($content, [
-    'l' => $language
+    'l' => $language,
 ]);
 ```
 
