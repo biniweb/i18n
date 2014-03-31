@@ -4,89 +4,69 @@ namespace Biniweb\I18n;
 
 use Biniweb\I18n\Constants\I18nConfigConstant;
 use Biniweb\I18n\Vo\I18nConfigVo;
+use Simplon\Helper\SingletonTrait;
 
 class I18n
 {
-    /** @var \Biniweb\I18n\Vo\I18nConfigVo */
-    protected $_configVo;
+    use SingletonTrait;
 
     #############################################
 
     /**
      * @param I18nConfigVo $vo
-     */
-    public function __construct(I18nConfigVo $vo)
-    {
-        $this->_configVo = $vo;
-    }
-
-    #############################################
-
-    /**
      * @return array|bool
      */
-    public function init()
+    public function init(I18nConfigVo $vo)
     {
-        $userLanguages = $this->_checkUserLanguages();
-        $appliedLanguage = NULL;
+        $userLanguages = $this->_checkUserLanguages($vo);
+        $languageCode = NULL;
         $languageFilePath = NULL;
+        $translations = [];
 
-        foreach ($userLanguages as $languageCode) {
+        foreach ($userLanguages as $code) {
 
-            $filePath = str_replace('{LANGUAGE}', $languageCode, $this->_configVo->getFilePath());
+            $filePath = str_replace(I18nConfigConstant::TRANSLATE_PARAM, $code, $vo->getFilePath());
+
             if (file_exists($filePath)) {
 
                 $languageFilePath = $filePath;
-                $appliedLanguage = $languageCode;
+                $languageCode = $code;
                 break;
             }
         }
 
-        if (isset($appliedLanguage) && isset($languageFilePath)) {
+        if (isset($languageCode) && isset($languageFilePath)) {
 
-            $cacheFilePath = $this->_configVo->getCachePath() . '/php_i18n_' . md5_file(__FILE__) . '_' . $appliedLanguage . '.cache.php';
+            $translationsData = parse_ini_file($languageFilePath, TRUE);
 
-            if (!file_exists($cacheFilePath) || filemtime($cacheFilePath) < filemtime($languageFilePath)) {
+            $translations = $this->_compile($translationsData);
+        }
 
-                $config = parse_ini_file($languageFilePath, TRUE);
-                $compiled = "<?php class " . I18nConfigConstant::PREFIX . " {\n";
-                $compiled .= $this->_compile($config);
-                $compiled .= '}';
-                file_put_contents($cacheFilePath, $compiled);
-                chmod($cacheFilePath, 0777);
-            }
+        if (!empty($translations)) {
 
-            require_once $cacheFilePath;
-
-            if (!$this->_configVo->getReturnObject()) {
-
-                return (new \ReflectionClass(I18nConfigConstant::PREFIX))->getConstants();
-            }
+            return $translations;
         }
 
         return FALSE;
-
     }
 
     #############################################
 
     /**
+     * @param I18nConfigVo $vo
      * @return array
      */
-    protected function _checkUserLanguages()
+    protected function _checkUserLanguages(I18nConfigVo $vo)
     {
-        $userLanguages = [];
+        $userLanguages[] = $vo->getForcedLanguage();
 
-        if ($this->_configVo->hasForcedLanguage()) {
-            $userLanguages[] = $this->_configVo->getForcedLanguage();
-        }
-
-        $userLanguages[] = $this->_configVo->getFallbackLanguage();
+        $userLanguages[] = $vo->getFallbackLanguage();
 
         $userLanguages = array_unique($userLanguages);
 
         foreach ($userLanguages as $key => $value) {
-            $userLanguages[$key] = preg_replace('/[^a-zA-Z0-9]/', '', $value);
+
+            $userLanguages[$key] = preg_replace(I18nConfigConstant::REGEX_CHECK_LANG, '', $value);
         }
 
         return $userLanguages;
@@ -95,21 +75,26 @@ class I18n
     #############################################
 
     /**
-     * @param $config
-     * @return string
+     * @param array $translations
+     * @param string $section
+     * @return array
      */
-    protected function _compile($config)
+    protected function _compile(array $translations, $section = '')
     {
-        $code = '';
-        foreach ($config as $key => $value) {
+        $result = [];
+
+        foreach ($translations as $key => $value) {
+
             if (is_array($value)) {
-                $code .= $this->_compile($value, $key . I18nConfigConstant::SECTION_SEPARETOR);
+
+                $result = array_merge($result, $this->_compile($value, $key . I18nConfigConstant::SECTION_SEPARETOR));
             } else {
-                $code .= 'const ' . $key . ' = \'' . str_replace('\'', '\\\'', $value) . "';\n";
+
+                $result[$section . $key] = $value;
             }
         }
 
-        return $code;
+        return $result;
     }
 
 }
