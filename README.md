@@ -34,24 +34,20 @@ somethingother = "Etwas anderes..."
 
 ### 2. Initialize the class
 
-`example_array.php`
+`example.php`
 
 ```php
 $data = [
     'file_path' => 'languages/{LANGUAGE}.ini',
-    'cache_path' => 'cache/',
-    'fallback_language' => 'en',
 ];
 $configVo = new \Biniweb\I18n\Vo\I18nConfigVo($data);
 
-$i18n = new \Biniweb\I18n\I18n($configVo);
-
-$l = $i18n->init();
+$l = \Biniweb\I18n\I18n::getInstance()->init($configVo);
 ```
 
 ### 3. Use the localizations
 
-`example_array.php`
+`example.php`
 
 ```php
 <p>A greeting: <?php echo $l['greeting']; ?> </p>
@@ -68,6 +64,7 @@ $l = $i18n->init();
 $content = join('', file('example_mustache.html'));
 
 $engine = new Mustache_Engine();
+
 echo $engine->render($content, [
     'l' => $l,
 ]);

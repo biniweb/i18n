@@ -2,7 +2,6 @@
 
 $data = [
     'file_path' => 'languages/{LANGUAGE}.ini',
-    'fallback_language' => 'en',
 ];
 $configVo = new \Biniweb\I18n\Vo\I18nConfigVo($data);
 
