@@ -4,12 +4,11 @@ Simple PHP i18n
 Some of its features:
 
 * Translations in ini-files
-* File caching
-* Return array of translation (suitable for Mustache engine template)
-* Automatic finding out what language to use
+* Return array of translation (suitable also for Mustache engine template)
 
 ## Setup
-To use the i18n class, look at the test/example.php. You will find there a simple tutorial for this class in the file. Otherwise follow these easy five steps:
+To use the i18n class, look at the test/example.php or test/example_mustache.php and test/example_mustache.html.
+You will find there a simple tutorial for this class in the file. Otherwise follow these easy five steps:
 
 ### 1. Create language files
 To use this class, you have to use ini files for the translated strings. This could look like this:
@@ -56,11 +55,18 @@ $l = \Biniweb\I18n\I18n::getInstance()->init($configVo);
 
 ## Mustache
 
-### 3. Use the localizations with Mustache
+### 2. Initialize the class with Mustache
 
 `example_mustache.php`
 
 ```php
+$data = [
+    'file_path' => 'languages/{LANGUAGE}.ini',
+];
+$configVo = new \Biniweb\I18n\Vo\I18nConfigVo($data);
+
+$l = \Biniweb\I18n\I18n::getInstance()->init($configVo);
+
 $content = join('', file('example_mustache.html'));
 
 $engine = new Mustache_Engine();
@@ -70,7 +76,7 @@ echo $engine->render($content, [
 ]);
 ```
 
-### 4. html template
+### 3. html template
 
 `example_mustache.html`
 
